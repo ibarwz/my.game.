@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Поймай квадрат</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      text-align: center;
+      background: #f0f0f0;
+    }
+    h1 {
+      margin-top: 20px;
+    }
+    #game {
+      position: relative;
+      width: 600px;
+      height: 400px;
+      background: #fff;
+      margin: 20px auto;
+      border: 2px solid #333;
+      overflow: hidden;
+    }
+    #square {
+      width: 50px;
+      height: 50px;
+      background: crimson;
+      position: absolute;
+      cursor: pointer;
+      display: none;
+    }
+    #info {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+    #startBtn {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Поймай квадрат</h1>
+  <div id="game">
+    <div id="square"></div>
+  </div>
+  <div id="info">
+    Очки: <span id="score">0</span> | Время: <span id="time">30</span> сек
+  </div>
+  <button id="startBtn">Старт</button>
+
+  <script>
+    const square = document.getElementById('square');
+    const game = document.getElementById('game');
+    const scoreEl = document.getElementById('score');
+    const timeEl = document.getElementById('time');
+    const startBtn = document.getElementById('startBtn');
+
+    let score = 0;
+    let timeLeft = 30;
+    let timer, showInterval;
+
+    function randomPosition() {
+      const x = Math.random() * (game.clientWidth - 50);
+      const y = Math.random() * (game.clientHeight - 50);
+      square.style.left = `${x}px`;
+      square.style.top = `${y}px`;
+    }
+
+    function startGame() {
+      score = 0;
+      timeLeft = 30;
+      scoreEl.textContent = score;
+      timeEl.textContent = timeLeft;
+      startBtn.disabled = true;
+      square.style.display = 'block';
+      randomPosition();
+
+      timer = setInterval(() => {
+        timeLeft--;
+        timeEl.textContent = timeLeft;
+        if (timeLeft <= 0) endGame();
+      }, 1000);
+
+      showInterval = setInterval(() => {
+        randomPosition();
+      }, 700);
+    }
+
+    function endGame() {
+      clearInterval(timer);
+      clearInterval(showInterval);
+      square.style.display = 'none';
+      startBtn.disabled = false;
+      alert(`Игра окончена! Ваш счёт: ${score}`);
+    }
+
+    square.addEventListener('click', () => {
+      score++;
+      scoreEl.textContent = score;
+      randomPosition();
+    });
+
+    startBtn.addEventListener('click', startGame);
+  </script>
+</body>
+</html>
